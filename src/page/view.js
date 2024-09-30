@@ -11,19 +11,16 @@ function View() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://ironwood-backend.vercel.app/place/allPlace');
+      const response = await axios.get('https://ironwood-latest-backend.vercel.app/place/allPlace');
       for (let index = 0; index < response.data.length; index++) {
         const element = response.data[index].En;
         
         element._id = response.data[index]._id
-        console.log("Hiii");
 
         newArray.push(element)
-        console.log("Hiii");
 
       }
       setData(newArray);
-      console.log(response.data);
       
       
     } catch (err) {
@@ -42,7 +39,7 @@ function View() {
     
     if (confirmDelete) {
       try {
-        await axios.delete(`https://ironwood-backend.vercel.app/place/${id}`);
+        await axios.delete(`https://ironwood-latest-backend.vercel.app/place/${id}`);
         // If delete was successful, filter the deleted item from the UI
         setData((prevData) => prevData.filter((item) => item._id !== id));
         setSuccessMessage('Item successfully deleted!');

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
@@ -9,12 +9,30 @@ const Panel = () => {
     ShortDescription: '',
     Image: null,
     Map: '',
-    Type: ''
+    Type: '',
+    Phone: '',
+    DirMap: ''
   });
 
   const [imagePreview, setImagePreview] = useState(null);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const fileInputRef = useRef(null); // Ref for the file input
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://ironwood-latest-backend.vercel.app/element/header/En');
+      setData(response.data);
+      console.log(response.data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -35,27 +53,20 @@ const Panel = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create FormData object
     const dataToSend = new FormData();
     for (const key in formData) {
       dataToSend.append(key, formData[key]);
     }
 
-    console.log(dataToSend);
-    
     try {
-      const response = await axios.post('https://ironwood-backend.vercel.app/place/createPlace', dataToSend, {
+      const response = await axios.post('https://ironwood-latest-backend.vercel.app/place/createPlace', dataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
 
       console.log(response.data);
-
-      // Show success popup
       setShowPopup(true);
-
-      // Clear the form, image preview, and file input
       setFormData({
         Name: '',
         Description: '',
@@ -63,8 +74,8 @@ const Panel = () => {
         Image: null,
         Map: '',
         Type: '',
-        Phone:'',
-        DirMap:''
+        Phone: '',
+        DirMap: ''
       });
       setImagePreview(null);
       if (fileInputRef.current) {
@@ -74,7 +85,6 @@ const Panel = () => {
       setTimeout(() => {
         setShowPopup(false);
       }, 5000);
-
     } catch (error) {
       console.error('Error submitting data:', error);
     }
@@ -83,14 +93,22 @@ const Panel = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
-        <div className='flex justify-between'>
-        <h1 className="text-2xl font-bold mb-6">ADD PLACES</h1>
-        <Link to="/view">
-          <button  className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
-          View All Places
-          </button>
-        </Link>
-        </div>
+      <div className='flex flex-col md:flex-row justify-between items-center mb-6'>
+  <h1 className="text-2xl font-bold">ADD PLACES</h1>
+  <div className="flex space-x-4 mt-4 md:mt-0">
+    <Link to="/view">
+      <button className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+        View All Places
+      </button>
+    </Link>
+    <Link to="/element">
+      <button className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+        Update Element
+      </button>
+    </Link>
+  </div>
+</div>
+
        
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Name */}
@@ -143,7 +161,6 @@ const Panel = () => {
               placeholder="Enter phone number"
               value={formData.Phone}
               onChange={handleChange}
-              rows="4"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -158,7 +175,7 @@ const Panel = () => {
               onChange={handleChange}
               accept="image/*"
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ref={fileInputRef} // Attach ref to the file input
+              ref={fileInputRef}
             />
             {imagePreview && (
               <div className="mt-4">
@@ -203,14 +220,16 @@ const Panel = () => {
               value={formData.Type}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={!data} // Disable until data is loaded
             >
               <option value="">Select type</option>
-              <option value="Restaurants">Restaurants</option>
-              <option value="Happy-Hours">Happy-Hours</option>
-              <option value="Food-Shops">Food-Shops</option>
-              <option value="Rentals">Rentals</option>
-              <option value="Spa">Spa</option>
-              <option value="SkiLifts">SkiLifts</option>
+              {data && data.length > 2 && (
+                <>
+                  <option value={data[1]}>{data[1]}</option>
+                  <option value={data[2]}>{data[2]}</option>
+                  <option value={data[3]}>{data[3]}</option>
+                </>
+              )}
             </select>
           </div>
 
