@@ -11,7 +11,8 @@ const Update = () => {
     Map: '',
     Type: '',
     Phone: '',
-    DirMap: ''
+    DirMap: '',
+    Link:''
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
@@ -25,7 +26,6 @@ const Update = () => {
     try {
       const response = await axios.get('https://ironwood-latest-backend.vercel.app/element/header/En');
       setData(response.data);
-      console.log(response.data);
     } catch (err) {
       setError(err.message);
     }
@@ -43,7 +43,8 @@ const Update = () => {
         Map: data.Map,
         Type: data.Type,
         Phone: data.Phone,
-        DirMap: data.DirMap
+        DirMap: data.DirMap,
+        Link: data.Link
       });
       setImagePreview(data.Image);
     } catch (err) {
@@ -95,7 +96,6 @@ const Update = () => {
         }
       });
 
-      console.log(response.data);
       setShowPopup(true);
 
       // Reset the form
@@ -107,7 +107,8 @@ const Update = () => {
         Map: '',
         Type: '',
         Phone: '',
-        DirMap: ''
+        DirMap: '',
+        Link:''
       });
       setImagePreview(null);
       if (fileInputRef.current) {
@@ -243,6 +244,19 @@ const Update = () => {
             />
           </div>
 
+          <div>
+            <label htmlFor="link" className="block text-sm font-medium text-gray-700 mb-2">Link</label>
+            <input
+              type="text"
+              id="link"
+              name="Link"
+              value={formData.Link}
+              onChange={handleChange}
+              placeholder="Enter Link"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
               {/* Type */}
               <div>
             <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">Type</label>
@@ -260,6 +274,11 @@ const Update = () => {
                   <option value={data[1]}>{data[1]}</option>
                   <option value={data[2]}>{data[2]}</option>
                   <option value={data[3]}>{data[3]}</option>
+                  <option value={data[4]}>{data[4]}</option>
+                  <option value={data[5]}>{data[5]}</option>
+                  <option value={data[6]}>{data[6]}</option>
+                  <option value={data[7]}>{data[7]}</option>
+                  <option value={data[8]}>{data[8]}</option>
                 </>
               )}
             </select>
