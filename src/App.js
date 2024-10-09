@@ -5,10 +5,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import View from "./page/view";
 import Update from "./page/update";
 import UpdateEle from "./page/updateEle";
+import { AuthProvider } from '.././src/AuthContext';
+
 
 
 function App() {
   return (
+        <AuthProvider>
+
     <Router>
       <Routes>
         <Route path="/" element={<Admin />} />
@@ -18,6 +22,7 @@ function App() {
         <Route path="/update/:_id" element={<Update />} />
       </Routes>
     </Router>
+ </AuthProvider>
   );
 }
 
