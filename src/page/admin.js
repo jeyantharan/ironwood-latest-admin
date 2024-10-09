@@ -1,20 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
+// src/Login.js
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
-const Admin = () => {
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Link to="/panel">
-        <div className="bg-white hover:bg-gray-300 shadow-lg rounded-lg p-6 max-w-sm mx-auto text-center cursor-pointer">
-          <h1 className="text-3xl font-bold text-gray-800 md:text-4xl lg:text-5xl">
-            Ironwood Admin
-          </h1>
-          <br />
-            
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (username === 'admin' && password === 'password') {
+            login(); // Update authentication state
+            navigate('/panel'); // Redirect to the panel page
+        } else {
+            alert('Invalid credentials');
+        }
+    };
+
+    return (
+        <div className="flex items-center justify-center h-screen bg-gray-100">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-96">
+                <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="border border-gray-300 p-2 w-full rounded mb-4"
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="border border-gray-300 p-2 w-full rounded mb-4"
+                    required
+                />
+                <button
+                    type="submit"
+                    className="bg-green-500 text-white p-2 rounded w-full hover:bg-green-600"
+                >
+                    Login
+                </button>
+            </form>
         </div>
-      </Link>
-    </div>
-  );
+    );
 };
 
-export default Admin;
+export default Login;
