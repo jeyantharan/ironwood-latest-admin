@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import { useAuth } from '../AuthContext';
+import { Navigate } from 'react-router-dom';
 
 const Panel = () => {
   const [formData, setFormData] = useState({
@@ -91,6 +93,11 @@ const Panel = () => {
     }
   };
 
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+      return <Navigate to="/" />; // Redirect to login if not authenticated
+  }
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-4xl">
