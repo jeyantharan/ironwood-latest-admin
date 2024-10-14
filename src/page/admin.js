@@ -11,7 +11,7 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (username === 'admin' && password === 'password') {
+        if (username === 'admin' && password === 'Livigno-24') {
             login(); // Update authentication state
             navigate('/panel'); // Redirect to the panel page
         } else {
